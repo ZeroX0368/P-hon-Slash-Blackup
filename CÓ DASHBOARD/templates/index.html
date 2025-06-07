@@ -4,16 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Discord Bot Dashboard</title>
+    <title>Blackup Dashboard</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             color: #333;
@@ -27,328 +23,230 @@
         
         .header {
             text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
             margin-bottom: 30px;
-            color: white;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
         
         .header h1 {
+            color: white;
             font-size: 2.5em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin: 0 0 10px 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        
+        .status.online {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        .status.offline {
+            background-color: #f44336;
+            color: white;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 20px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 14px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #5865F2, #7289DA);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(88, 101, 242, 0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(45deg, #FF6B6B, #FF8E8E);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
         }
         
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
-            margin-bottom: 30px;
+            margin: 30px 0;
         }
         
         .stat-card {
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
-        .stat-number {
+        .stat-card h3 {
+            color: white;
+            margin: 0 0 10px 0;
+            font-size: 1.2em;
+        }
+        
+        .stat-card .number {
+            color: #FFD700;
             font-size: 2em;
             font-weight: bold;
-            color: #667eea;
-            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
         
-        .stat-label {
-            font-size: 1.1em;
-            color: #666;
-        }
-        
-        .servers-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 20px;
-        }
-        
-        .server-card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        .servers-list {
+            background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: transform 0.3s ease;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
         
-        .server-card:hover {
-            transform: translateY(-5px);
+        .servers-list h2 {
+            color: white;
+            margin-top: 0;
+            text-align: center;
         }
         
-        .server-header {
+        .server-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
             display: flex;
             align-items: center;
-            margin-bottom: 15px;
+            gap: 15px;
         }
         
         .server-icon {
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            margin-right: 15px;
-            background: #667eea;
+            background: #7289DA;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-weight: bold;
-            font-size: 1.5em;
+            font-size: 18px;
         }
         
-        .server-name {
-            font-size: 1.3em;
-            font-weight: bold;
-            color: #333;
-        }
-        
-        .server-info {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        
-        .info-item {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .info-label {
-            font-size: 0.9em;
-            color: #666;
-            margin-bottom: 2px;
-        }
-        
-        .info-value {
-            font-weight: bold;
-            color: #333;
-        }
-        
-        .server-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        
-        .btn {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.9em;
-            text-decoration: none;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-primary {
-            background: #667eea;
+        .server-info h4 {
             color: white;
+            margin: 0 0 5px 0;
         }
         
-        .btn-primary:hover {
-            background: #5a67d8;
+        .server-info p {
+            color: rgba(255, 255, 255, 0.8);
+            margin: 0;
+            font-size: 14px;
         }
         
-        .btn-secondary {
-            background: #e2e8f0;
-            color: #4a5568;
-        }
-        
-        .btn-secondary:hover {
-            background: #cbd5e0;
-        }
-        
-        .bot-status {
-            display: inline-block;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-        
-        .status-online {
-            background: #48bb78;
-            color: white;
-        }
-        
-        .status-offline {
-            background: #f56565;
-            color: white;
-        }
-        
-        .backup-count {
-            background: #667eea;
-            color: white;
-            padding: 4px 8px;
-            border-radius: 10px;
-            font-size: 0.8em;
-            margin-left: 10px;
-        }
-        
-        .header-buttons {
-            margin-top: 20px;
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        .btn-invite {
-            background: linear-gradient(45deg, #5865f2, #4752c4);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 25px;
-            font-weight: bold;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(88, 101, 242, 0.3);
-        }
-        
-        .btn-invite:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(88, 101, 242, 0.4);
-            background: linear-gradient(45deg, #4752c4, #3c4fb8);
-        }
-        
-        .btn-support {
-            background: linear-gradient(45deg, #57f287, #3ba55d);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 25px;
-            font-weight: bold;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(87, 242, 135, 0.3);
-        }
-        
-        .btn-support:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(87, 242, 135, 0.4);
-            background: linear-gradient(45deg, #3ba55d, #2d8049);
+        @media (max-width: 768px) {
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🤖 Discord Bot Dashboard</h1>
-            <div class="bot-status {{ 'status-online' if bot_online else 'status-offline' }}">
-                {{ 'Bot Online' if bot_online else 'Bot Offline' }}
-            </div>
-            <div class="header-buttons">
-                <a href="https://discord.com/oauth2/authorize?client_id=1379844965810704444&permissions=1719253867687153&integration_type=0&scope=bot" 
-                   class="btn btn-invite" target="_blank">
-                    🤖 Invite Bot
-                </a>
-                <a href="http://fi9.bot-hosting.net:21469" 
-                   class="btn btn-support" target="_blank">
-                    💬 Support Server
-                </a>
-            </div>
+            <h1>Blackup Dashboard</h1>
+        
+        <div class="action-buttons">
+            <a href="https://discord.com/oauth2/authorize?client_id=1380815457992441917&permissions=8&integration_type=0&scope=bot" 
+               class="btn btn-primary" target="_blank">
+                🔗 Invite Bot To Server
+            </a>
+            <a href="https://discord.com/quests/1377060108684492800" 
+               class="btn btn-secondary" target="_blank">
+                💬 Join Support Server
+            </a>
         </div>
         
+        {% if bot_online %}
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-number">{{ total_servers }}</div>
-                <div class="stat-label">Total Servers</div>
+                <h3>📊 Total Servers</h3>
+                <div class="number">{{ total_servers }}</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">{{ total_members }}</div>
-                <div class="stat-label">Total Members</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">{{ total_channels }}</div>
-                <div class="stat-label">Total Channels</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">{{ total_backups }}</div>
-                <div class="stat-label">Total Backups</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">{{ uptime }}</div>
-                <div class="stat-label">Bot Uptime</div>
+                <h3>⏱️ Uptime</h3>
+                <div class="number" style="font-size: 1.2em;">{{ uptime }}</div>
             </div>
         </div>
         
-        <div class="servers-grid">
+        {% if servers %}
+        <div class="servers-list">
+            <h2>🏠 Connected Servers</h2>
             {% for server in servers %}
-            <div class="server-card">
-                <div class="server-header">
-                    <div class="server-icon">
+            <div class="server-item">
+                <div class="server-icon">
+                    {% if server.icon_url %}
+                        <img src="{{ server.icon_url }}" style="width: 100%; height: 100%; border-radius: 50%;" alt="Server Icon">
+                    {% else %}
                         {{ server.name[0].upper() }}
-                    </div>
-                    <div>
-                        <div class="server-name">{{ server.name }}</div>
-                        {% if server.backup_count > 0 %}
-                        <span class="backup-count">{{ server.backup_count }} backups</span>
-                        {% endif %}
-                    </div>
-                </div>
-                
-                <div class="server-info">
-                    <div class="info-item">
-                        <div class="info-label">Server ID</div>
-                        <div class="info-value">{{ server.id }}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Members</div>
-                        <div class="info-value">{{ server.member_count }}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Channels</div>
-                        <div class="info-value">{{ server.channel_count }}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Owner</div>
-                        <div class="info-value">{{ server.owner_name }}</div>
-                    </div>
-                </div>
-                
-                {% if server.description %}
-                <div style="margin-top: 10px; padding: 10px; background: #f7fafc; border-radius: 8px; font-size: 0.9em; color: #4a5568;">
-                    {{ server.description }}
-                </div>
-                {% endif %}
-                
-                <div class="server-actions">
-                    {% if server.invite_url %}
-                    <a href="{{ server.invite_url }}" class="btn btn-primary" target="_blank">Join Server</a>
                     {% endif %}
-                    <button class="btn btn-secondary" onclick="showServerDetails('{{ server.id }}')">View Details</button>
+                </div>
+                <div class="server-info">
+                    <h4>{{ server.name }}</h4>
+                    <p>Owner: {{ server.owner_name }}</p>
+                    <p>Server ID: {{ server.id }}</p>
+                    {% if server.description %}
+                        <p>{{ server.description[:100] }}{% if server.description|length > 100 %}...{% endif %}</p>
+                    {% endif %}
                 </div>
             </div>
             {% endfor %}
         </div>
+        {% endif %}
+        {% endif %}
     </div>
-    
-    <script>
-        function showServerDetails(serverId) {
-            alert('Server details for ID: ' + serverId + '\nThis feature can be expanded to show more detailed information.');
-        }
-        
-        // Auto-refresh every 30 seconds
-        setTimeout(function() {
-            location.reload();
-        }, 30000);
-    </script>
 </body>
 </html>
