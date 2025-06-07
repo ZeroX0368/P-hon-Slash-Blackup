@@ -26,8 +26,6 @@ def get_bot_data():
             'servers': [],
             'total_servers': 0,
             'total_members': 0,
-            'total_channels': 0,
-            'total_backups': 0,
             'uptime': '0 seconds'
         }
     
@@ -73,10 +71,7 @@ def get_bot_data():
             'id': str(guild.id),
             'name': guild.name,
             'description': guild.description,
-            'member_count': guild.member_count,
-            'channel_count': len(guild.channels),
             'owner_name': owner_name,
-            'backup_count': backup_count,
             'invite_url': None,
             'icon_url': str(guild.icon.url) if guild.icon else None
         }
@@ -89,9 +84,6 @@ def get_bot_data():
         'bot_online': True,
         'servers': servers_data,
         'total_servers': len(servers_data),
-        'total_members': total_members,
-        'total_channels': total_channels,
-        'total_backups': total_backups,
         'uptime': uptime_str
     }
 
@@ -103,11 +95,6 @@ def dashboard():
     """Main dashboard page"""
     data = get_bot_data()
     return render_template('index.html', **data)
-
-@web_app.route('/api/bot-stats')
-def bot_stats():
-    """API endpoint for bot statistics"""
-    return jsonify(get_bot_data())
 
 def run_web_server():
     """Run the Flask web server"""
